@@ -107,7 +107,7 @@
   }
   async function processFile(file){
     reset(false);
-    if(!/\\.xlsx?$/i.test(file.name)){status("文件格式不支持，请选择 .xls 或 .xlsx。","error");return;}
+    if(!/\.xlsx?$/i.test(file.name)){status("文件格式不支持，请选择 .xls 或 .xlsx。","error");return;}
     $("fileInfo").classList.remove("hidden");$("fileInfo").textContent=file.name+" · "+(file.size/1024).toFixed(1)+" KB";
     if(!window.XLSX){status("Excel 解析组件加载失败。请刷新页面后重试。","error");return;}
     status("正在本地读取工作簿及所有有效行…");
@@ -119,7 +119,7 @@
       const rows=XLSX.utils.sheet_to_json(ws,{header:1,defval:"",raw:true});
       const header=findHeader(rows);
       const result=parseRows(rows,header,sheetName,file.name);
-      converted={records:result.records,summary:result.summary,diagnostics:result.diagnostics,metadata:parseBankMetadata(rows),filename:file.name.replace(/\\.xlsx?$/i,"")};
+      converted={records:result.records,summary:result.summary,diagnostics:result.diagnostics,metadata:parseBankMetadata(rows),filename:file.name.replace(/\.xlsx?$/i,"")};
       $("previewPanel").classList.remove("hidden");$("exportBtn").disabled=false;
       const d=result.diagnostics;
       $("stats").innerHTML=[["有效交易",d.accepted],["原始非空数据行",d.nonEmptyRows],["跳过待核对",d.skipped],["重复候选（保留）",d.duplicateCandidates]].map(x=>'<div class="stat"><b>'+x[1]+'</b><span>'+x[0]+'</span></div>').join("");
