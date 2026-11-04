@@ -13,7 +13,7 @@
   dz.addEventListener("drop",e=>{const f=e.dataTransfer.files[0];if(f)processFile(f);});
 
   function status(msg,type=""){const el=$("status");el.textContent=msg;el.className="status "+type;}
-  function norm(v){return String(v??"").replace(/\\s+/g,"").replace(/[：:]/g,"").trim();}
+  function norm(v){return String(v??"").replace(/\s+/g,"").replace(/[：:]/g,"").trim();}
   function findHeader(rows){
     for(let r=0;r<Math.min(rows.length,80);r++){
       const vals=(rows[r]||[]).map(norm);
@@ -27,19 +27,19 @@
   function parseDate(v){
     if(v instanceof Date)return formatDate(v);
     if(typeof v==="number" && v>20000 && v<80000){const d=XLSX.SSF.parse_date_code(v);return [d.y,String(d.m).padStart(2,"0"),String(d.d).padStart(2,"0")].join("-");}
-    const s=asText(v);const m=s.match(/(20\\d{2})[年./-](\\d{1,2})[月./-](\\d{1,2})/);
+    const s=asText(v);const m=s.match(/(20\d{2})[年./-](\d{1,2})[月./-](\d{1,2})/);
     if(m)return m[1]+"-"+m[2].padStart(2,"0")+"-"+m[3].padStart(2,"0");
     return "";
   }
   function parseTime(v){
     if(v instanceof Date)return v.toTimeString().slice(0,8);
     if(typeof v==="number" && v>=0 && v<1){const n=Math.round(v*86400);return [Math.floor(n/3600),Math.floor(n%3600/60),n%60].map(x=>String(x).padStart(2,"0")).join(":");}
-    const s=asText(v);const m=s.match(/(\\d{1,2}):(\\d{1,2})(?::(\\d{1,2}))?/);
+    const s=asText(v);const m=s.match(/(\d{1,2}):(\d{1,2})(?::(\d{1,2}))?/);
     return m?[m[1].padStart(2,"0"),m[2].padStart(2,"0"),(m[3]||"00").padStart(2,"0")].join(":"):"00:00:00";
   }
   function amount(v){
     if(typeof v==="number")return Math.abs(v);
-    const s=String(v??"").replace(/[￥¥,，\\s]/g,"");
+    const s=String(v??"").replace(/[￥¥,，\s]/g,"");
     if(!s||s==="—"||s==="–"||s==="-")return 0;
     const n=Number(s);return Number.isFinite(n)?Math.abs(n):0;
   }
@@ -101,8 +101,8 @@
   }
   function parseBankMetadata(rows){
     const all=rows.slice(0,Math.min(rows.length,8)).flat().map(asText).join(" ");
-    const period=all.match(/(20\\d{2}[/-]\\d{1,2}[/-]\\d{1,2})\\s*至\\s*(20\\d{2}[/-]\\d{1,2}[/-]\\d{1,2})/);
-    const name=all.match(/姓名[：:]\\s*([^\\s]+)/);
+    const period=all.match(/(20\d{2}[/-]\d{1,2}[/-]\d{1,2})\s*至\s*(20\d{2}[/-]\d{1,2}[/-]\d{1,2})/);
+    const name=all.match(/姓名[：:]\s*([^\s]+)/);
     return {periodStart:period?period[1]:"",periodEnd:period?period[2]:"",owner:name?name[1]:""};
   }
   async function processFile(file){
