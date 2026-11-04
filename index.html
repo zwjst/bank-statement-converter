@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="在浏览器本地将交通银行 XLS/XLSX 账单转换为微信支付账单格式。">
+  <title>银行账单转换器</title>
+  <link rel="stylesheet" href="./styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <script defer src="./app.js"></script>
+</head>
+<body>
+  <main class="shell">
+    <header class="top">
+      <div class="brand-mark">账</div>
+      <div><p class="eyebrow">LOCAL-FIRST · XLS / XLSX</p><h1>银行账单转换器</h1><p class="sub">交通银行账单 → 微信支付账单格式</p></div>
+      <span class="privacy"><i></i> 浏览器本地处理</span>
+    </header>
+    <section class="panel">
+      <div class="section-title"><span class="step">01</span><div><h2>选择交通银行账单</h2><p>支持 .xls / .xlsx；文件不会上传到服务器。</p></div></div>
+      <label class="drop" id="dropzone" for="fileInput">
+        <span class="upload-icon">↑</span><strong>点击选择文件，或将账单拖放到这里</strong><span>仅支持 Excel 文件</span>
+        <input id="fileInput" type="file" accept=".xls,.xlsx">
+      </label>
+      <div id="fileInfo" class="file-info hidden"></div>
+      <div id="status" class="status" role="status" aria-live="polite">等待选择文件</div>
+    </section>
+    <section class="panel hidden" id="previewPanel">
+      <div class="section-title"><span class="step">02</span><div><h2>核对识别结果</h2><p>自动扫描前 30 行查找交通银行账单表头。</p></div></div>
+      <div class="stats" id="stats"></div>
+      <div class="table-wrap"><table><thead><tr><th>交易时间</th><th>交易对方</th><th>交易方式</th><th>收/支</th><th class="num">金额（元）</th></tr></thead><tbody id="previewRows"></tbody></table></div>
+      <p class="hint" id="mappingHint"></p>
+      <div class="actions"><button class="primary" id="exportBtn" disabled>导出微信格式 XLSX</button><button class="secondary" id="resetBtn">重新选择</button></div>
+    </section>
+    <section class="panel notes">
+      <h2>转换规则与隐私说明</h2>
+      <ul>
+        <li>自动识别记账日期、交易时间、交易地点、交易方式、支出金额、收入金额、余额、对方户名及对方开户行。</li>
+        <li>支出与收入分开标记；退款、转账及疑似本人账户转账按交易方式和对方信息作基础分类。</li>
+        <li>银行流水没有提供的交易单号、商户单号不会伪造，导出时留空。</li>
+        <li>重复记录按日期、时间、金额、收支、交易方式及对方信息组合识别，并在导出前排除。</li>
+        <li>文件解析和生成均在当前浏览器内完成；不会向本项目服务器发送账单内容。</li>
+      </ul>
+      <p class="small">本工具目前仅支持交通银行账单及微信格式导出。支付宝版本暂不包含。首次加载 Excel 解析库需要从 jsDelivr CDN 获取脚本；交易数据不会发送给 CDN。</p>
+    </section>
+    <footer>Bank Statement Converter · Open-source utility</footer>
+  </main>
+</body>
+</html>
