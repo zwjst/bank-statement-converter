@@ -160,6 +160,15 @@
       r.date+" "+r.time,r.type,r.counterparty,r.product,r.flow,r.amount,r.paymentWay,r.state,"","",r.note
     ]));
     const ws=XLSX.utils.aoa_to_sheet(aoa);
+    // Explicitly assign all summary cells so spreadsheet readers cannot render the
+    // preamble as blank rows due to sparse-sheet serialization or stale output.
+    aoa.slice(0,17).forEach((row,i)=>{
+      if(row && row.length && row[0]!==undefined && row[0]!==null && String(row[0])!==""){
+        ws["A"+(i+1)]={t:"s",v:String(row[0])};
+      }
+    });
+    ws["!ref"]="A1:K"+aoa.length;
+    ws["!rows"]=Array.from({length:aoa.length},(_,i)=>({hpt:i<17?20:22}));
     ws["!cols"]=[{wch:22},{wch:14},{wch:26},{wch:28},{wch:10},{wch:13},{wch:22},{wch:14},{wch:30},{wch:30},{wch:48}];
     const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,"Sheet1");
     XLSX.writeFile(wb,converted.filename+"_微信账单完整格式.xlsx",{bookType:"xlsx",compression:true});
