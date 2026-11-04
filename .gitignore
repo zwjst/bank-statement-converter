@@ -1,0 +1,5 @@
+# Local test exports and source statements
+*.xls
+*.xlsx
+*.csv
+.DS_Store
