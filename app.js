@@ -138,7 +138,7 @@
     const exported=now.getFullYear()+"-"+pad(now.getMonth()+1)+"-"+pad(now.getDate())+" "+pad(now.getHours())+":"+pad(now.getMinutes())+":"+pad(now.getSeconds());
     const aoa=[
       ["微信支付账单明细"],
-      ["微信昵称：[交通银行账单转换]"],
+      ["微信昵称：[交通银行账单]"],
       ["起始时间：["+start+" 00:00:00] 终止时间：["+end+" 23:59:59]"],
       ["导出类型：[全部账单]"],
       ["导出时间：["+exported+"]"],
@@ -148,10 +148,10 @@
       ["支出："+s.expenseCount+"笔 "+moneyText(s.expenseAmount)+"元"],
       ["中性交易："+s.neutralCount+"笔 "+moneyText(s.neutralAmount)+"元"],
       ["注："],
-      ["1. 本文件由交通银行银行卡流水转换生成，并非微信支付原始交易凭证。"],
-      ["2. 充值、提现、理财、信用卡还款及账户转账等按中性交易处理；请核对分类。"],
-      ["3. 交易单号、商户单号等银行流水未提供的字段保持空白，不生成虚构编号。"],
-      ["4. 本明细仅用于个人账务迁移及核对。"],
+      ["1. 充值/提现/理财通购买/零钱通存取/信用卡还款等交易，将计入中性交易"],
+      ["2. 若交易记录明细无有效内容，则代表该时间段内此账单无交易"],
+      ["3. 本明细仅供个人对账使用"],
+      ["4. 本账单中所有时间均为UTC+08:00时间"],
       [],
       ["----------------------微信支付账单明细列表--------------------"],
       OUTPUT
@@ -172,7 +172,7 @@
     ws["!cols"]=[{wch:22},{wch:14},{wch:26},{wch:28},{wch:10},{wch:13},{wch:22},{wch:14},{wch:30},{wch:30},{wch:48}];
     const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,"Sheet1");
     XLSX.writeFile(wb,converted.filename+"_微信账单完整格式.xlsx",{bookType:"xlsx",compression:true});
-    status("已生成包含账单摘要、统计信息、说明及全部交易明细的微信格式 XLSX。","success");
+    status("微信账单格式 XLSX 已生成。","success");
   }
   function reset(clearInput=true){
     converted=null;$("previewPanel").classList.add("hidden");$("exportBtn").disabled=true;
